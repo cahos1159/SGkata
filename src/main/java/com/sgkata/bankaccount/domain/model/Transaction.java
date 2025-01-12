@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     private String id;
-    private String accountNum;
+    private String sourceAccount;
+    private String targetAccount;
     private LocalDateTime date;
     private BigDecimal amount;
 
@@ -24,12 +25,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getAccountNum() {
-        return accountNum;
+    public String getSourceAccount() {
+        return sourceAccount;
     }
 
-    public void setAccountNum(String accountNum) {
-        this.accountNum = accountNum;
+    public void setSourceAccount(String sourceAccount) {
+        this.sourceAccount = sourceAccount;
+    }
+
+    public String getTargetAccount() {
+        return targetAccount;
+    }
+
+    public void setTargetAccount(String targetAccount) {
+        this.targetAccount = targetAccount;
     }
 
     public LocalDateTime getDate() {

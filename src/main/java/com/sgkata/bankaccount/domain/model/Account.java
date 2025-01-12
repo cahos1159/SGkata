@@ -15,8 +15,8 @@ public class Account {
         accountPersistance.save(this);
     }
 
-    public List<Transaction> loadExistingTransaction(AccountPersistance accountPersistance) {
-        return accountPersistance.loadExistingTransactions(this.accountId);
+    public void loadExistingTransaction(AccountPersistance accountPersistance) {
+        setTransactions(accountPersistance.loadExistingTransactions(this.accountId));
     }
 
     public List<Transaction> getTransactions() {

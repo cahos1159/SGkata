@@ -44,9 +44,9 @@ class AccountTests {
         List<Transaction> mockTransactions = new ArrayList<>();
         mockTransactions.add(new Transaction());
         when(accountPersistance.loadExistingTransactions(accountId)).thenReturn(mockTransactions);
-
+        account.loadExistingTransaction(accountPersistance);
         // Act
-        List<Transaction> transactions = account.loadExistingTransaction(accountPersistance);
+        List<Transaction> transactions = account.getTransactions();
 
         // Assert
         verify(accountPersistance, times(1)).loadExistingTransactions(accountId);

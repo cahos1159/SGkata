@@ -25,7 +25,8 @@ class TransactionTests {
     void testSaveCallsTransactionPersistance() {
         // Arrange
         transaction.setId("txn123");
-        transaction.setAccountNum("ACC456");
+        transaction.setTargetAccount("ACC456");
+        transaction.setSourceAccount("ACC001");
         transaction.setDate(LocalDateTime.now());
         transaction.setAmount(new BigDecimal("100.50"));
 
@@ -46,13 +47,14 @@ class TransactionTests {
 
         // Act
         transaction.setId(id);
-        transaction.setAccountNum(accountNum);
+        transaction.setTargetAccount(accountNum);
+        transaction.setSourceAccount("ACC001");
         transaction.setDate(date);
         transaction.setAmount(amount);
 
         // Assert
         assertEquals(id, transaction.getId());
-        assertEquals(accountNum, transaction.getAccountNum());
+        assertEquals(accountNum, transaction.getTargetAccount());
         assertEquals(date, transaction.getDate());
         assertEquals(amount, transaction.getAmount());
     }
@@ -61,7 +63,8 @@ class TransactionTests {
     void testSaveDoesNotThrowException() {
         // Arrange
         transaction.setId("txn999");
-        transaction.setAccountNum("ACC888");
+        transaction.setTargetAccount("ACC888");
+        transaction.setSourceAccount("ACC001");
         transaction.setDate(LocalDateTime.now());
         transaction.setAmount(new BigDecimal("300.00"));
 
