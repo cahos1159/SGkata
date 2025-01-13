@@ -1,17 +1,25 @@
-package com.sgkata.bankaccount.domain.model;
+package com.sgkata.bankaccount.infrastructure.out.entity;
 
-import com.sgkata.bankaccount.domain.port.AccountPersistence;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public class Account {
-    private String accountId;
-    private String owner;
-    private BigDecimal balance;
+@Entity
+@Table(name = "account")
+public class AccountJpaEntity {
 
-    public void save(AccountPersistence accountPersistance){
-        accountPersistance.save(this);
-    }
+    @Id
+    @GeneratedValue
+    @NotNull
+    private String accountId;
+    @NotNull
+    private String owner;
+    @NotNull
+    private BigDecimal balance;
 
     public BigDecimal getBalance() {
         return balance;
@@ -36,4 +44,5 @@ public class Account {
     public void setAccountId(String accountNum) {
         this.accountId = accountNum;
     }
+
 }

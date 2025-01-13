@@ -3,26 +3,27 @@ package com.sgkata.bankaccount.domain.service;
 import com.sgkata.bankaccount.application.dto.TransactionDto;
 import com.sgkata.bankaccount.domain.exception.TransactionFunctionalRuleException;
 import com.sgkata.bankaccount.domain.model.Account;
-import com.sgkata.bankaccount.domain.port.AccountPersistance;
+import com.sgkata.bankaccount.domain.port.AccountPersistence;
+import com.sgkata.bankaccount.domain.port.TransactionPersistance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class TransactionServiceTests {
+class TransactionServiceTest {
 
-    private AccountPersistance accountPersistance;
+    private AccountPersistence accountPersistance;
     private TransactionService transactionService;
 
     @BeforeEach
     void setUp() {
-        accountPersistance = mock(AccountPersistance.class);
-        transactionService = new TransactionService(accountPersistance);
+        accountPersistance = mock(AccountPersistence.class);
+        TransactionPersistance transactionPersistance =  mock(TransactionPersistance.class);
+        transactionService = new TransactionService(accountPersistance,transactionPersistance);
     }
 
     @Test
@@ -43,13 +44,10 @@ class TransactionServiceTests {
         Account sourceAccount = new Account();
         sourceAccount.setAccountId(sourceAccountId);
         sourceAccount.setBalance(new BigDecimal("100.00"));
-        sourceAccount.setTransactions(new ArrayList<>());
 
         Account targetAccount = new Account();
         targetAccount.setAccountId(targetAccountId);
         targetAccount.setBalance(new BigDecimal("300.00"));
-        targetAccount.setTransactions(new ArrayList<>());
-        targetAccount.getTransactions().add(null);
 
         when(accountPersistance.getAccountById(targetAccountId)).thenReturn(targetAccount);
         when(accountPersistance.getAccountById(sourceAccountId)).thenReturn(sourceAccount);
@@ -62,7 +60,6 @@ class TransactionServiceTests {
         verify(accountPersistance, times(1)).getAccountById(targetAccountId);
         verify(accountPersistance, times(1)).getAccountById(sourceAccountId);
         verify(accountPersistance, times(1)).save(targetAccount);
-        assertEquals(1, targetAccount.getTransactions().size());
     }
 
     @Test
@@ -83,7 +80,6 @@ class TransactionServiceTests {
         Account sourceAccount = new Account();
         sourceAccount.setAccountId(targetAccountId);
         sourceAccount.setBalance(new BigDecimal("200.00"));
-        sourceAccount.setTransactions(new ArrayList<>());
 
         when(accountPersistance.getAccountById(targetAccountId)).thenReturn(sourceAccount);
 

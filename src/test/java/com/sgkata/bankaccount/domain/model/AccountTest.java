@@ -1,6 +1,6 @@
 package com.sgkata.bankaccount.domain.model;
 
-import com.sgkata.bankaccount.domain.port.AccountPersistance;
+import com.sgkata.bankaccount.domain.port.AccountPersistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,15 +11,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AccountTests {
+class AccountTest {
 
     private Account account;
-    private AccountPersistance accountPersistance;
+    private AccountPersistence accountPersistance;
 
     @BeforeEach
     void setUp() {
         account = new Account();
-        accountPersistance = mock(AccountPersistance.class);
+        accountPersistance = mock(AccountPersistence.class);
     }
 
     @Test
@@ -37,41 +37,21 @@ class AccountTests {
     }
 
     @Test
-    void testLoadExistingTransactionCallsAccountPersistance() {
-        // Arrange
-        String accountId = "acc123";
-        account.setAccountId(accountId);
-        List<Transaction> mockTransactions = new ArrayList<>();
-        mockTransactions.add(new Transaction());
-        when(accountPersistance.loadExistingTransactions(accountId)).thenReturn(mockTransactions);
-        account.loadExistingTransaction(accountPersistance);
-        // Act
-        List<Transaction> transactions = account.getTransactions();
-
-        // Assert
-        verify(accountPersistance, times(1)).loadExistingTransactions(accountId);
-        assertEquals(mockTransactions, transactions);
-    }
-
-    @Test
     void testGettersAndSetters() {
         // Arrange
         String accountId = "acc456";
         String owner = "Jane Smith";
         BigDecimal balance = new BigDecimal("2000.50");
-        List<Transaction> transactions = new ArrayList<>();
 
         // Act
         account.setAccountId(accountId);
         account.setOwner(owner);
         account.setBalance(balance);
-        account.setTransactions(transactions);
 
         // Assert
         assertEquals(accountId, account.getAccountId());
         assertEquals(owner, account.getOwner());
         assertEquals(balance, account.getBalance());
-        assertEquals(transactions, account.getTransactions());
     }
 
     @Test

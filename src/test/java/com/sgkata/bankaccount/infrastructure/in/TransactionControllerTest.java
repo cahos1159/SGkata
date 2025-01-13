@@ -18,13 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TransactionController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class TransactionControllerTests {
+class TransactionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
     private TransactionPort transactionPort;
+
 
     @Test
     void sendMoney_shouldCallTransactionPortWithCorrectTransactionDto() throws Exception {

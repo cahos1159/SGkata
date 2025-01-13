@@ -5,19 +5,24 @@ import com.sgkata.bankaccount.application.port.TransactionPort;
 import com.sgkata.bankaccount.domain.exception.TransactionFunctionalRuleException;
 import com.sgkata.bankaccount.domain.model.Account;
 import com.sgkata.bankaccount.domain.model.Transaction;
-import com.sgkata.bankaccount.domain.port.AccountPersistance;
+import com.sgkata.bankaccount.domain.port.AccountPersistence;
+import com.sgkata.bankaccount.domain.port.TransactionPersistance;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TransactionService implements TransactionPort {
 
-    private final AccountPersistance accountPersistance;
+    private final AccountPersistence accountPersistance;
+    private final TransactionPersistance transactionPersistance;
 
-    public TransactionService(AccountPersistance accountPersistance) {
+    public TransactionService(AccountPersistence accountPersistance, TransactionPersistance transactionPersistance) {
         this.accountPersistance = accountPersistance;
+        this.transactionPersistance = transactionPersistance;
     }
 
     @Override
+    @Transactional
     public void newTransaction(TransactionDto transactionDto)  {
         final Transaction newTransaction = new Transaction();
         newTransaction.setSourceAccount(transactionDto.targetAccount());
@@ -25,18 +30,19 @@ public class TransactionService implements TransactionPort {
         newTransaction.setDate(transactionDto.date());
         newTransaction.setAmount(transactionDto.amount());
 
-        Account sourceAccountBeforeTransaction = accountPersistance.getAccountById(newTransaction.getSourceAccount());
-        Account targetAccountBeforeTransaction = accountPersistance.getAccountById(newTransaction.getTargetAccount());
+        Account sourceAccount = accountPersistance.getAccountById(newTransaction.getSourceAccount());
+        Account targetAccount = accountPersistance.getAccountById(newTransaction.getTargetAccount());
 
-        if(targetAccountBeforeTransaction == null) {
+        if(targetAccount == null) {
             throw new TransactionFunctionalRuleException("Target Account does not exist");
         }
-        if(sourceAccountBeforeTransaction.getBalance().compareTo(newTransaction.getAmount()) < 0) {
+        if(sourceAccount.getBalance().compareTo(newTransaction.getAmount()) < 0) {
             throw new TransactionFunctionalRuleException("Balance is not enough for such transaction");
         }
-
-        sourceAccountBeforeTransaction.loadExistingTransaction(accountPersistance);
-        sourceAccountBeforeTransaction.getTransactions().add(newTransaction);
-        sourceAccountBeforeTransaction.save(accountPersistance);
+        sourceAccount.setBalance(sourceAccount.getBalance().subtract(newTransaction.getAmount()));
+        targetAccount.setBalance(targetAccount.getBalance().add(newTransaction.getAmount()));
+        newTransaction.save(transactionPersistance);
+        sourceAccount.save(accountPersistance);
+        targetAccount.save(accountPersistance);
     }
 }

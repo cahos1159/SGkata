@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class TransactionTests {
+class TransactionTest {
 
     private Transaction transaction;
     private TransactionPersistance transactionPersistance;

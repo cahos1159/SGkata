@@ -6,7 +6,7 @@ import com.sgkata.bankaccount.domain.model.Transaction;
 import java.util.List;
 
 
-public interface AccountPersistance {
+public interface AccountPersistence {
 
     void save(Account account);
 
